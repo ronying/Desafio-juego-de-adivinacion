@@ -2,37 +2,50 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class JuegoAdivinanza {
-    public static void main(String[] args) {
-        // Genera un número aleatorio entre 0 y 100
+    private int numeroSecreto;
+    private int intentosMaximos;
+    private int intentosRestantes;
+
+    // Constructor
+    public JuegoAdivinanza(int intentosMaximos) {
+        this.intentosMaximos = intentosMaximos;
+        this.intentosRestantes = intentosMaximos;
+        generarNumeroSecreto();  // Genera el número secreto al iniciar el juego
+    }
+
+    // Genera un número aleatorio entre 0 y 100
+    private void generarNumeroSecreto() {
         Random random = new Random();
-        int numeroSecreto = random.nextInt(101);  // Número entre 0 y 100
-        Scanner scanner = new Scanner(System.in);
-        int intentos = 5;  // Número máximo de intentos
+        this.numeroSecreto = random.nextInt(101);  // Número entre 0 y 100
+    }
 
-        System.out.println("¡Bienvenido al juego de adivinanzas!");
-        System.out.println("Adivina el número entre 0 y 100. Tienes " + intentos + " intentos.");
+    // Metodo que permite jugar un intento
+    public boolean jugar(int numeroUsuario) {
+        intentosRestantes--;
 
-        // Bucle para permitir 5 intentos
-        for (int i = 1; i <= intentos; i++) {
-            System.out.print("Intento " + i + ": Ingresa tu número: ");
-            int numeroUsuario = scanner.nextInt();  // Lee la entrada del usuario
-
-            // Compara el número ingresado con el número secreto
-            if (numeroUsuario == numeroSecreto) {
-                System.out.println("¡Felicidades! Adivinaste el número en el intento " + i + ".");
-                break;  // Sale del bucle si el usuario adivinó correctamente
-            } else if (numeroUsuario < numeroSecreto) {
-                System.out.println("El número es mayor.");
-            } else {
-                System.out.println("El número es menor.");
-            }
-
-            // Si llega al último intento sin haber adivinado
-            if (i == intentos) {
-                System.out.println("Lo siento, has agotado tus intentos. El número era " + numeroSecreto + ".");
-            }
+        if (numeroUsuario == numeroSecreto) {
+            System.out.println("¡Felicidades! Adivinaste el número.");
+            return true;  // Devuelve true si adivinó el número
+        } else if (numeroUsuario < numeroSecreto) {
+            System.out.println("El número es mayor.");
+        } else {
+            System.out.println("El número es menor.");
         }
 
-        scanner.close();  // Cierra el scanner para liberar recursos
+        if (intentosRestantes == 0) {
+            System.out.println("Lo siento, has agotado tus intentos. El número era " + numeroSecreto + ".");
+        }
+
+        return false;  // Devuelve false si no adivinó aún
+    }
+
+    // Metodo que indica si el jugador tiene más intentos
+    public boolean quedanIntentos() {
+        return intentosRestantes > 0;
+    }
+
+    // Metodo que muestra cuántos intentos quedan
+    public int getIntentosRestantes() {
+        return intentosRestantes;
     }
 }
